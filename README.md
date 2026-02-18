@@ -64,8 +64,7 @@ python app.py
 ```
 
 Visit `http://localhost:5000` and experience the future of system monitoring!
-
-### 🎯 What Makes This Special
+ What Makes This Special
 
 This isn't just a dashboard - it's an **immersive experience**. Every element has been crafted with attention to detail:
 
@@ -75,7 +74,7 @@ This isn't just a dashboard - it's an **immersive experience**. Every element ha
 - **Accessibility**: Full keyboard navigation, focus indicators, and reduced motion support
 - **Theme Support**: Beautiful dark mode (default) and light mode
 
-### 💎 Technical Excellence
+Technical Excellence
 
 - Modern CSS with custom properties
 - GSAP for buttery-smooth animations
@@ -85,7 +84,7 @@ This isn't just a dashboard - it's an **immersive experience**. Every element ha
 - Responsive grid layouts
 - Performance-optimized rendering
 
-### 🔧 How It Works
+ How It Works
 
 1. **ResourceMonitor**: Collects system metrics using psutil
 2. **AnomalyDetector**: Uses Isolation Forest to detect unusual patterns
@@ -94,16 +93,10 @@ This isn't just a dashboard - it's an **immersive experience**. Every element ha
 5. **Real-time Updates**: WebSocket-based live data streaming
 6. **AI Chatbot**: Natural language interface for system control
 
-### ⚙️ Configuration
+ Configuration
 
 The system automatically:
 - Learns baseline behavior from first 30 samples
 - Detects anomalies in real-time
 - Logs anomalies to `anomaly_log.json`
 - Provides automated fix suggestions
-
----
-
-**Built with ❤️ by KIRO x CLAUDE - Showcasing the power of AI-assisted development**
-
-*This is what happens when cutting-edge AI meets creative design - a truly immersive, production-ready system monitoring dashboard.*
