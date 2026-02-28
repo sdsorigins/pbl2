@@ -274,8 +274,7 @@ body {
 
 /* HEADER */
 header {
-    position: sticky;
-    top: 20px;
+    position: relative;
     z-index: 100;
     margin-bottom: 40px;
 }
@@ -943,4 +942,579 @@ canvas {
 /* SMOOTH TRANSITIONS */
 * {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+
+/* DISK MANAGEMENT TOOLKIT */
+.disk-section {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border);
+}
+
+.disk-section:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+
+.section-header-collapsible {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 12px;
+    transition: all 0.3s;
+    user-select: none;
+}
+
+.section-header-collapsible:hover {
+    background: var(--bg-elevated);
+}
+
+.collapse-icon {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    transition: transform 0.3s;
+}
+
+.section-header-collapsible.collapsed .collapse-icon {
+    transform: rotate(-90deg);
+}
+
+.collapsible-content {
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, opacity 0.3s;
+    opacity: 1;
+}
+
+.collapsible-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+.disk-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.disk-stat-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.disk-stat-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-primary);
+}
+
+.disk-stat-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.disk-stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.directory-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.directory-item {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.directory-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--accent-primary);
+    transition: width 0.3s;
+}
+
+.directory-item:hover {
+    transform: translateX(8px);
+    border-color: var(--accent-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.directory-item:hover::before {
+    width: 6px;
+}
+
+.directory-item.severity-high::before {
+    background: var(--danger);
+}
+
+.directory-item.severity-medium::before {
+    background: var(--warning);
+}
+
+.directory-item.severity-low::before {
+    background: var(--success);
+}
+
+.directory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.directory-path {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-all;
+    flex: 1;
+}
+
+.impact-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+
+.impact-badge.high {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+.impact-badge.medium {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--warning);
+    border: 1px solid var(--warning);
+}
+
+.impact-badge.low {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+    border: 1px solid var(--success);
+}
+
+.directory-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    font-size: 0.85rem;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-row-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.stat-row-value {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 30px;
+    font-size: 0.95rem;
+}
+
+/* Scanning indicator */
+.scanning-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.scanning-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--accent-primary);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* TREEMAP VISUALIZATION */
+.treemap-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.treemap-back-btn {
+    padding: 8px 16px;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.treemap-back-btn:hover {
+    transform: translateX(-4px);
+    box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+.treemap-path {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: 'Courier New', monospace;
+}
+
+.treemap-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    min-height: 400px;
+    padding: 20px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+}
+
+.treemap-block {
+    position: relative;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.treemap-block:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    z-index: 10;
+}
+
+.treemap-block-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 10px;
+    text-align: center;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.treemap-block-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    word-break: break-word;
+    max-width: 100%;
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.treemap-block-size {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+}
+
+.treemap-block-percent {
+    font-size: 0.75rem;
+    opacity: 0.95;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 3px 8px;
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+}
+
+.treemap-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    text-align: center;
+    color: var(--text-secondary);
+    gap: 20px;
+}
+
+.treemap-message p {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Responsive treemap */
+@media (max-width: 768px) {
+    .treemap-block {
+        min-width: 100% !important;
+        width: 100% !important;
+        min-height: 100px;
+    }
+    
+    .treemap-block-name {
+        font-size: 0.9rem;
+    }
+    
+    .treemap-block-size {
+        font-size: 1.2rem;
+    }
+    
+    .treemap-block-percent {
+        font-size: 0.8rem;
+    }
+    
+    .treemap-container {
+        flex-direction: column;
+        padding: 15px;
+    }
+}
+
+/* Animation for block appearance */
+@keyframes blockFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.treemap-block {
+    animation: blockFadeIn 0.3s ease-out;
+}
+
+/* =============================================
+   SPLIT VISUALIZATION: BLOCKS + PIE CHART
+   ============================================= */
+
+.viz-split-container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.viz-panel {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.viz-panel-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Left panel: blocks keep their existing styles */
+.viz-panel .treemap-wrapper {
+    flex: 1;
+}
+
+/* Right panel: pie chart */
+.pie-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    min-height: 400px;
+}
+
+.pie-chart-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    max-width: 280px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.pie-chart-area canvas {
+    cursor: pointer;
+}
+
+.pie-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow-y: auto;
+    max-height: 220px;
+    padding-right: 4px;
+}
+
+.pie-legend::-webkit-scrollbar {
+    width: 4px;
+}
+.pie-legend::-webkit-scrollbar-track {
+    background: var(--bg-elevated);
+    border-radius: 4px;
+}
+.pie-legend::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 4px;
+}
+
+.pie-legend-item {
+    display: grid;
+    grid-template-columns: 14px 1fr auto auto;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.pie-legend-item:hover {
+    background: var(--bg-elevated);
+    border-color: var(--border);
+}
+
+.pie-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.pie-legend-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pie-legend-size {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.pie-legend-pct {
+    font-size: 0.78rem;
+    color: var(--accent-secondary);
+    font-weight: 700;
+    white-space: nowrap;
+    min-width: 40px;
+    text-align: right;
+}
+
+@media (max-width: 900px) {
+    .viz-split-container {
+        flex-direction: column;
+    }
+    .pie-chart-area {
+        max-width: 240px;
+    }
+}
+
+/* Info message below blocks (no subdirs notice) */
+.treemap-info-msg {
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    margin-top: 8px;
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    background: var(--bg-elevated);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
 }

@@ -252,6 +252,94 @@
                 </p>
             </div>
         </div>
+
+        <!-- Disk Management Toolkit -->
+        <div class="glass-card">
+            <div class="card-header">
+                <h3 class="card-title">Disk Management Toolkit</h3>
+                <button id="scanDiskBtn" class="btn-premium btn-primary" style="padding: 10px 20px; font-size: 0.9rem;">
+                    <span>🔍</span> Scan Filesystem
+                </button>
+            </div>
+            
+            <!-- Disk Overview -->
+            <div class="disk-section">
+                <h4 class="section-title">Disk Overview</h4>
+                <div class="disk-overview-grid">
+                    <div class="disk-stat-card">
+                        <div class="disk-stat-label">Total Size</div>
+                        <div id="diskTotal" class="disk-stat-value">-</div>
+                    </div>
+                    <div class="disk-stat-card">
+                        <div class="disk-stat-label">Used Space</div>
+                        <div id="diskUsed" class="disk-stat-value">-</div>
+                    </div>
+                    <div class="disk-stat-card">
+                        <div class="disk-stat-label">Free Space</div>
+                        <div id="diskFree" class="disk-stat-value">-</div>
+                    </div>
+                    <div class="disk-stat-card">
+                        <div class="disk-stat-label">Usage</div>
+                        <div id="diskUsage" class="disk-stat-value">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Root Cause Analysis (Feature 1) -->
+            <div class="disk-section" id="rootCauseSection" style="display: none;">
+                <div class="section-header-collapsible" id="rootCauseHeader">
+                    <h4 class="section-title">⚠️ Root Cause Analysis Available</h4>
+                    <span class="collapse-icon">▼</span>
+                </div>
+                <div id="rootCauseContent" class="collapsible-content">
+                    <div id="rootCauseList" class="directory-list"></div>
+                </div>
+            </div>
+
+            <!-- Disk Space Visualization (Treemap + Pie) -->
+            <div class="disk-section">
+                <div class="section-header-collapsible" id="largestHeader">
+                    <h4 class="section-title">📊 Disk Space Visualization</h4>
+                    <span class="collapse-icon">▼</span>
+                </div>
+                <div id="largestContent" class="collapsible-content">
+                    <div class="viz-split-container">
+                        <!-- Left: Treemap Blocks -->
+                        <div class="viz-panel">
+                            <div class="viz-panel-title">🗂️ Directory Blocks</div>
+                            <div id="treemapContainer" class="treemap-wrapper">
+                                <p class="empty-state">Click "Scan Filesystem" to visualize disk usage</p>
+                            </div>
+                        </div>
+                        <!-- Right: Pie Chart -->
+                        <div class="viz-panel">
+                            <div class="viz-panel-title">🥧 Storage Breakdown</div>
+                            <div id="pieContainer" class="pie-wrapper">
+                                <div class="pie-chart-area">
+                                    <canvas id="diskPieChart"></canvas>
+                                </div>
+                                <div id="pieLegend" class="pie-legend"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fastest Growing Directories -->
+            <div class="disk-section">
+                <div class="section-header-collapsible" id="growingHeader">
+                    <h4 class="section-title">📈 Fastest Growing Directories</h4>
+                    <span class="collapse-icon">▼</span>
+                </div>
+                <div id="growingContent" class="collapsible-content collapsed">
+                    <div id="growingList" class="directory-list">
+                        <p class="empty-state">Run filesystem scan to view data</p>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
     </div>
 
     <!-- AI Chatbot -->
@@ -291,5 +379,7 @@
 
     <script src="{{ url_for('static', filename='app-clean.js') }}"></script>
     <script src="{{ url_for('static', filename='chatbot.js') }}"></script>
+    <script src="{{ url_for('static', filename='disk-manager.js') }}"></script>
+    <script src="{{ url_for('static', filename='treemap.js') }}"></script>
 </body>
 </html>
