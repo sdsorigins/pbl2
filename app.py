@@ -275,11 +275,11 @@ def get_all_drives():
 
 @app.route('/api/disk/treemap')
 def get_treemap_data():
-    """Get directory tree data for treemap visualization - live OS scan for accuracy"""
+    """Get directory tree data for treemap visualization - full recursive scan for accuracy"""
     try:
         import os as _os
         path = request.args.get('path', None)
-        
+
         if not path:
             return jsonify({'error': 'Path parameter required'}), 400
 
@@ -287,6 +287,27 @@ def get_treemap_data():
 
         if not _os.path.isdir(path_normalized):
             return jsonify({'directories': [], 'path': path})
+
+        def get_dir_size(dir_path):
+            """Fully recursive directory size calculation"""
+            total_size = 0
+            file_count = 0
+            stack = [dir_path]
+            while stack:
+                current = stack.pop()
+                try:
+                    for entry in _os.scandir(current):
+                        try:
+                            if entry.is_file(follow_symlinks=False):
+                                total_size += entry.stat(follow_symlinks=False).st_size
+                                file_count += 1
+                            elif entry.is_dir(follow_symlinks=False):
+                                stack.append(entry.path)
+                        except (PermissionError, OSError):
+                            continue
+                except (PermissionError, OSError):
+                    continue
+            return total_size, file_count
 
         children = []
 
@@ -299,38 +320,7 @@ def get_treemap_data():
             if not entry.is_dir(follow_symlinks=False):
                 continue
             try:
-                # Calculate size of this subdirectory (one level deep for speed)
-                total_size = 0
-                file_count = 0
-                try:
-                    for sub_entry in _os.scandir(entry.path):
-                        try:
-                            if sub_entry.is_file(follow_symlinks=False):
-                                total_size += sub_entry.stat().st_size
-                                file_count += 1
-                            elif sub_entry.is_dir(follow_symlinks=False):
-                                # Go one more level deep
-                                try:
-                                    for sub2 in _os.scandir(sub_entry.path):
-                                        try:
-                                            if sub2.is_file(follow_symlinks=False):
-                                                total_size += sub2.stat().st_size
-                                                file_count += 1
-                                        except (PermissionError, OSError):
-                                            continue
-                                except (PermissionError, OSError):
-                                    pass
-                        except (PermissionError, OSError):
-                            continue
-                except (PermissionError, OSError):
-                    pass
-
-                # Also check snapshot for better size data if available
-                snapshot_metrics = disk_analyzer.current_snapshot.get(entry.path, {})
-                if snapshot_metrics.get('total_size', 0) > total_size:
-                    total_size = snapshot_metrics['total_size']
-                    file_count = snapshot_metrics.get('file_count', file_count)
-
+                total_size, file_count = get_dir_size(entry.path)
                 children.append({
                     'path': entry.path,
                     'name': entry.name,
@@ -341,24 +331,9 @@ def get_treemap_data():
             except (PermissionError, OSError):
                 continue
 
-        # Filter out zero-size and sort by size descending
+        # Filter zero-size and sort by size descending
         children = [c for c in children if c['size'] > 0]
         children.sort(key=lambda x: x['size'], reverse=True)
-
-        # If nothing found with sizes, return all dirs with 0 size so UI still shows them
-        if not children:
-            try:
-                for entry in _os.scandir(path_normalized):
-                    if entry.is_dir(follow_symlinks=False):
-                        children.append({
-                            'path': entry.path,
-                            'name': entry.name,
-                            'size': 1,
-                            'size_formatted': 'Unknown',
-                            'file_count': 0
-                        })
-            except (PermissionError, OSError):
-                pass
 
         return jsonify({
             'path': path,
