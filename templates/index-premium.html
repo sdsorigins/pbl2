@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Monitor - Van Gogh Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style-premium.css') }}">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+</head>
+<body data-theme="dark">
+    <canvas id="vg-canvas"></canvas>
+
+    <div class="hero-header">
+        <h1 class="hero-title">System Monitor</h1>
+        <p class="hero-subtitle">Real-Time Performance Analytics with Predictive Intelligence</p>
+        <div class="hero-cta">
+            <button id="startBtn" class="btn-premium btn-primary">
+                <span>▶</span> Start Monitoring
+            </button>
+            <button id="stopBtn" class="btn-premium btn-secondary" disabled>
+                <span>⏸</span> Stop Monitoring
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <svg width="30" height="30" viewBox="0 0 40 40" fill="white">
+                            <path d="M20 5L35 15V25L20 35L5 25V15L20 5Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <circle cx="20" cy="20" r="5" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1>System Monitor</h1>
+                        <p class="subtitle">Real-Time Analytics</p>
+                    </div>
+                </div>
+                <div class="controls">
+                    <button id="themeToggle" class="btn-icon" title="Toggle Theme">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="status-bar">
+            <div class="status-card">
+                <div class="status-info">
+                    <div class="status-label">Status</div>
+                    <div id="status" class="status-value">Idle</div>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-info">
+                    <div class="status-label">Machine Learning</div>
+                    <div id="learning" class="status-value">Ready</div>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-info">
+                    <div class="status-label">Anomalies</div>
+                    <div id="anomalyCount" class="status-value">0</div>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-info">
+                    <div class="status-label">Uptime</div>
+                    <div id="uptime" class="status-value">00:00:00</div>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-info">
+                    <div class="status-label">Samples</div>
+                    <div id="samples" class="status-value">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" data-tab="monitoring">Monitoring</button>
+            <button class="tab-btn" data-tab="storage">Storage</button>
+            <button class="btn-mini" onclick="testStorage()" style="margin-left: auto;">Test Storage</button>
+        </div>
+
+        <div id="monitoringContent" class="tab-content active">
+            <div class="metrics-grid">
+            <div class="metric-card glass-card">
+                <div class="card-header">
+                    <h3 class="card-title">CPU Performance</h3>
+                    <span id="cpuBadge" class="badge badge-success">Normal</span>
+                </div>
+                <div class="metric-display">
+                    <div class="metric-value-large">
+                        <span id="cpuValue">0</span><span style="font-size: 2.5rem; opacity: 0.6;">%</span>
+                    </div>
+                    <div class="metric-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Cores</span>
+                            <span id="cpuCores" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Threads</span>
+                            <span class="stat-value">-</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div id="cpuProgress" class="progress-fill"></div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-loading">
+                        <div class="chart-loading-spinner"></div>
+                        <p>Loading chart...</p>
+                    </div>
+                    <canvas id="cpuChart"></canvas>
+                </div>
+            </div>
+
+            <div class="metric-card glass-card">
+                <div class="card-header">
+                    <h3 class="card-title">Memory Usage</h3>
+                    <span id="memBadge" class="badge badge-success">Normal</span>
+                </div>
+                <div class="metric-display">
+                    <div class="metric-value-large">
+                        <span id="memValue">0</span><span style="font-size: 2.5rem; opacity: 0.6;">%</span>
+                    </div>
+                    <div class="metric-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Used</span>
+                            <span id="memUsed" class="stat-value">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total</span>
+                            <span class="stat-value">-</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div id="memProgress" class="progress-fill"></div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-loading">
+                        <div class="chart-loading-spinner"></div>
+                        <p>Loading chart...</p>
+                    </div>
+                    <canvas id="memChart"></canvas>
+                </div>
+            </div>
+
+            <div class="metric-card glass-card">
+                <div class="card-header">
+                    <h3 class="card-title">Network Activity</h3>
+                    <span class="badge badge-success">Active</span>
+                </div>
+                <div class="network-grid">
+                    <div class="network-card">
+                        <div class="network-icon upload-icon">↑</div>
+                        <div class="network-info">
+                            <div id="netUpload" class="network-value">0 MB/s</div>
+                            <div class="network-label">Upload</div>
+                        </div>
+                    </div>
+                    <div class="network-card">
+                        <div class="network-icon download-icon">↓</div>
+                        <div class="network-info">
+                            <div id="netDownload" class="network-value">0 MB/s</div>
+                            <div class="network-label">Download</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-loading">
+                        <div class="chart-loading-spinner"></div>
+                        <p>Loading chart...</p>
+                    </div>
+                    <canvas id="netChart"></canvas>
+                </div>
+            </div>
+
+            <div class="metric-card glass-card">
+                <div class="card-header">
+                    <h3 class="card-title">Disk I/O</h3>
+                    <span class="badge badge-success">Healthy</span>
+                </div>
+                <div class="network-grid">
+                    <div class="network-card">
+                        <div class="network-icon read-icon">R</div>
+                        <div class="network-info">
+                            <div id="diskRead" class="network-value">0 MB/s</div>
+                            <div class="network-label">Read</div>
+                        </div>
+                    </div>
+                    <div class="network-card">
+                        <div class="network-icon write-icon">W</div>
+                        <div class="network-info">
+                            <div id="diskWrite" class="network-value">0 MB/s</div>
+                            <div class="network-label">Write</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-loading">
+                        <div class="chart-loading-spinner"></div>
+                        <p>Loading chart...</p>
+                    </div>
+                    <canvas id="diskChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        </div>
+
+        <div id="storageContent" class="tab-content storage-section" style="display: none;">
+
+            <div class="glass-card">
+                <div class="card-header">
+                    <h3 class="card-title">Storage Overview</h3>
+                    <div class="card-actions">
+                        <button class="btn-mini" onclick="storageManager.loadDriveOverview()">Refresh</button>
+                    </div>
+                </div>
+                <div id="driveOverview" class="drive-overview">
+                    <p style="text-align: center; color: var(--text-secondary); padding: 40px;">
+                        Loading drive information...
+                    </p>
+                </div>
+            </div>
+
+            <div class="storage-tools-grid">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Directory Analysis</h3>
+                        <select id="driveSelect" class="drive-selector">
+                            <option value="">Select Drive...</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-loading">
+                            <div class="chart-loading-spinner"></div>
+                            <p>Loading chart...</p>
+                        </div>
+                        <canvas id="storageTreeChart"></canvas>
+                    </div>
+                    <div id="directoryTree" class="directory-tree">
+                        <p style="text-align: center; color: var(--text-secondary); padding: 20px;">
+                            Select a drive and click Analyze to view directory structure
+                        </p>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3 class="card-title">File Types</h3>
+                        <button class="btn-mini analyze-btn" data-path="">Analyze</button>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-loading">
+                            <div class="chart-loading-spinner"></div>
+                            <p>Loading chart...</p>
+                        </div>
+                        <canvas id="fileTypesChart"></canvas>
+                    </div>
+                    <div id="fileTypesList" class="file-types-list">
+                        <p style="text-align: center; color: var(--text-secondary); padding: 20px;">
+                            Click Analyze to see file type breakdown
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="storage-analysis-grid">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Large Files</h3>
+                        <button class="btn-mini find-large-btn" data-path="">Find Large Files</button>
+                    </div>
+                    <div id="largeFilesList" class="large-files-list">
+                        <p style="text-align: center; color: var(--text-secondary); padding: 20px;">
+                            Click "Find Large Files" to discover space-consuming files
+                        </p>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Duplicate Files</h3>
+                        <button class="btn-mini find-duplicates-btn" data-path="">Find Duplicates</button>
+                    </div>
+                    <div id="duplicatesList" class="duplicates-list">
+                        <p style="text-align: center; color: var(--text-secondary); padding: 20px;">
+                            Click "Find Duplicates" to identify potential space savings
+                        </p>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Cleanup Suggestions</h3>
+                        <button class="btn-mini cleanup-btn" data-path="">Get Suggestions</button>
+                    </div>
+                    <div id="cleanupSuggestions" class="cleanup-suggestions">
+                        <p style="text-align: center; color: var(--text-secondary); padding: 20px;">
+                            Click "Get Suggestions" for automated cleanup recommendations
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="scanProgressModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Fast Scanning Directory...</h3>
+                    <button class="btn-mini" onclick="cancelScan()">Cancel</button>
+                </div>
+                <div class="modal-body">
+                    <div class="scan-progress-bar">
+                        <div class="scan-progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="scan-progress-text">Initializing fast scan...</div>
+                    <p style="margin-top: 15px; color: var(--text-secondary);">
+                        Optimized for speed - scanning top-level folders only
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="chatbot" class="chatbot hidden">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <div class="chatbot-avatar">SDS</div>
+                <div>
+                    <h4>System Assistant</h4>
+                    <span class="chatbot-status">● Online</span>
+                </div>
+            </div>
+            <div class="chatbot-header-actions">
+                <button id="commandListBtn" class="btn-icon" title="Command List">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+                    </svg>
+                </button>
+                <button id="chatbotToggle" class="btn-icon" title="Minimize">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13H5v-2h14v2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="commandListPanel" class="command-list-panel hidden">
+            <div class="command-list-header">
+                <h5>Available Commands</h5>
+                <p class="command-list-subtitle">Click any command to use it</p>
+            </div>
+            <div class="command-list-grid">
+                <button class="command-btn" data-command="What is my current CPU usage?">
+                    <span class="command-text">CPU Status</span>
+                </button>
+                <button class="command-btn" data-command="How much memory am I using?">
+                    <span class="command-text">Memory Check</span>
+                </button>
+                <button class="command-btn" data-command="Show me network activity">
+                    <span class="command-text">Network Stats</span>
+                </button>
+                <button class="command-btn" data-command="What processes are using the most resources?">
+                    <span class="command-text">Top Processes</span>
+                </button>
+                <button class="command-btn" data-command="Are there any anomalies detected?">
+                    <span class="command-text">Anomaly Check</span>
+                </button>
+                <button class="command-btn" data-command="How can I optimize my system performance?">
+                    <span class="command-text">Optimization Tips</span>
+                </button>
+                <button class="command-btn" data-command="What is my disk usage?">
+                    <span class="command-text">Disk Status</span>
+                </button>
+                <button class="command-btn" data-command="Explain system metrics to me">
+                    <span class="command-text">Learn Metrics</span>
+                </button>
+            </div>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot-message">
+                <div class="message-content">
+                    Hello! I'm your system assistant. Ask me about CPU, memory, network, or disk usage.
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Ask me anything about your system..." />
+            <button id="sendBtn" class="btn-premium btn-primary">Send</button>
+        </div>
+    </div>
+
+    <button id="chatbotOpen" class="chatbot-fab">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+            <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+        </svg>
+    </button>
+
+    <script src="{{ url_for('static', filename='vangogh-bg.js') }}"></script>
+    <script src="{{ url_for('static', filename='shooting-stars.js') }}"></script>
+    <script src="{{ url_for('static', filename='app-clean.js') }}"></script>
+    <script src="{{ url_for('static', filename='chatbot.js') }}"></script>
+    <script src="{{ url_for('static', filename='storage.js') }}"></script>
+    <script src="{{ url_for('static', filename='ultimate-storage.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='ultimate-storage.css') }}">
+</body>
+</html>
