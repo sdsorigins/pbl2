@@ -40,24 +40,42 @@ class VanGoghBackground {
         const cols = Math.ceil(this.canvas.width / this.gridSize);
         const rows = Math.ceil(this.canvas.height / this.gridSize);
         
+        this.vortexCenters = [
+            { x: this.canvas.width * 0.75, y: this.canvas.height * 0.25, strength: 3 },
+            { x: this.canvas.width * 0.25, y: this.canvas.height * 0.35, strength: 2.5 },
+            { x: this.canvas.width * 0.5, y: this.canvas.height * 0.15, strength: 2 }
+        ];
+        
         for (let y = 0; y < rows; y++) {
             for (let x = 0; x < cols; x++) {
-                const angle = Math.cos(x * 0.05) * Math.sin(y * 0.05) * Math.PI * 2;
-                this.flowField.push({ x: x * this.gridSize, y: y * this.gridSize, angle });
+                const px = x * this.gridSize;
+                const py = y * this.gridSize;
+                
+                let angle = Math.cos(x * 0.05) * Math.sin(y * 0.05) * Math.PI * 2;
+                
+                this.vortexCenters.forEach(vortex => {
+                    const dx = px - vortex.x;
+                    const dy = py - vortex.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const influence = Math.exp(-dist / 200) * vortex.strength;
+                    angle += Math.atan2(dy, dx) + Math.PI / 2 * influence;
+                });
+                
+                this.flowField.push({ x: px, y: py, angle });
             }
         }
     }
 
     initStrokes() {
         this.strokes = [];
-        for (let i = 0; i < 1200; i++) {
+        for (let i = 0; i < 1500; i++) {
             this.strokes.push({
                 x: Math.random() * this.canvas.width,
                 y: Math.random() * this.canvas.height,
-                length: 18 + Math.random() * 17,
-                width: 1.5 + Math.random() * 1.5,
-                speed: 0.3 + Math.random() * 0.5,
-                opacity: 0.3 + Math.random() * 0.4,
+                length: 20 + Math.random() * 25,
+                width: 1.8 + Math.random() * 2,
+                speed: 0.4 + Math.random() * 0.6,
+                opacity: 0.4 + Math.random() * 0.5,
                 colorIndex: Math.floor(Math.random() * 4),
                 phase: Math.random() * Math.PI * 2
             });
@@ -66,11 +84,11 @@ class VanGoghBackground {
     
     initStars() {
         this.stars = [];
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 20; i++) {
             this.stars.push({
                 x: Math.random() * this.canvas.width,
-                y: Math.random() * this.canvas.height * 0.6,
-                baseRadius: 8 + Math.random() * 12,
+                y: Math.random() * this.canvas.height * 0.65,
+                baseRadius: 10 + Math.random() * 15,
                 phase: Math.random() * Math.PI * 2,
                 speed: 0.5 + Math.random() * 0.5
             });
@@ -120,25 +138,42 @@ class VanGoghBackground {
     
     drawStar(star) {
         const pulse = Math.sin(this.time * 0.001 * star.speed + star.phase);
-        const radius = star.baseRadius + pulse * 4;
+        const radius = star.baseRadius + pulse * 5;
         
         this.ctx.save();
-        this.ctx.globalAlpha = 0.7 + pulse * 0.3;
+        this.ctx.globalAlpha = 0.8 + pulse * 0.2;
         
-        const gradient = this.ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, radius * 2);
-        gradient.addColorStop(0, 'rgba(232,180,60,0.9)');
-        gradient.addColorStop(0.4, 'rgba(200,132,10,0.5)');
+        const gradient = this.ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, radius * 2.5);
+        gradient.addColorStop(0, 'rgba(255,220,100,1)');
+        gradient.addColorStop(0.3, 'rgba(232,180,60,0.8)');
+        gradient.addColorStop(0.6, 'rgba(200,132,10,0.4)');
         gradient.addColorStop(1, 'rgba(200,132,10,0)');
         
         this.ctx.fillStyle = gradient;
         this.ctx.beginPath();
-        this.ctx.arc(star.x, star.y, radius * 2, 0, Math.PI * 2);
+        this.ctx.arc(star.x, star.y, radius * 2.5, 0, Math.PI * 2);
         this.ctx.fill();
         
-        this.ctx.fillStyle = this.palette.wheat;
+        this.ctx.fillStyle = '#fff8e0';
         this.ctx.beginPath();
-        this.ctx.arc(star.x, star.y, radius * 0.3, 0, Math.PI * 2);
+        this.ctx.arc(star.x, star.y, radius * 0.4, 0, Math.PI * 2);
         this.ctx.fill();
+        
+        for (let i = 0; i < 8; i++) {
+            const angle = (Math.PI * 2 / 8) * i + this.time * 0.0005;
+            const rayLength = radius * (1.5 + Math.sin(this.time * 0.002 + i) * 0.5);
+            
+            this.ctx.globalAlpha = 0.3 + pulse * 0.2;
+            this.ctx.strokeStyle = 'rgba(232,180,60,0.6)';
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.moveTo(star.x, star.y);
+            this.ctx.lineTo(
+                star.x + Math.cos(angle) * rayLength,
+                star.y + Math.sin(angle) * rayLength
+            );
+            this.ctx.stroke();
+        }
         
         this.ctx.restore();
     }
@@ -147,10 +182,29 @@ class VanGoghBackground {
         try {
             this.time++;
             
-            const breathe = 0.7 + Math.sin(this.time * 0.0005) * 0.3;
-            this.ctx.globalAlpha = 0.08;
+            const breathe = 0.65 + Math.sin(this.time * 0.0005) * 0.35;
+            this.ctx.globalAlpha = 0.06;
             this.ctx.fillStyle = this.palette.warmBlack;
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            
+            this.ctx.globalAlpha = breathe;
+            
+            this.vortexCenters.forEach(vortex => {
+                const vortexPulse = Math.sin(this.time * 0.0008) * 0.5 + 0.5;
+                const gradient = this.ctx.createRadialGradient(
+                    vortex.x, vortex.y, 0,
+                    vortex.x, vortex.y, 150 * vortex.strength
+                );
+                gradient.addColorStop(0, `rgba(61, 122, 191, ${0.15 * vortexPulse})`);
+                gradient.addColorStop(0.5, `rgba(26, 58, 107, ${0.08 * vortexPulse})`);
+                gradient.addColorStop(1, 'rgba(13, 32, 64, 0)');
+                
+                this.ctx.globalAlpha = 0.6;
+                this.ctx.fillStyle = gradient;
+                this.ctx.beginPath();
+                this.ctx.arc(vortex.x, vortex.y, 150 * vortex.strength, 0, Math.PI * 2);
+                this.ctx.fill();
+            });
             
             this.ctx.globalAlpha = breathe;
             
