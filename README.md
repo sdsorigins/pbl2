@@ -1,6 +1,6 @@
-# 🎨 System Monitor - Van Gogh Edition
+# System Monitor - Van Gogh Edition
 
-> A living painting that breathes with your system's heartbeat
+> Real-time system monitoring with AI-powered anomaly detection and artistic visualization
 
 ![Van Gogh Edition](https://img.shields.io/badge/Edition-Van%20Gogh-FFD700?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python)
@@ -9,228 +9,247 @@
 
 ---
 
-## ✨ Experience the Masterpiece
+## Overview
 
-Transform system monitoring into an immersive art experience. Watch as your CPU, memory, and network activity paint themselves across a canvas inspired by Van Gogh's *Starry Night* — swirling flow fields, pulsing golden stars, and brushstroke-textured charts that breathe with your system's rhythm.
+A sophisticated system monitoring dashboard that combines real-time performance tracking with artistic visualization inspired by Vincent van Gogh's Starry Night. The application features AI-powered anomaly detection using Isolation Forest machine learning, comprehensive storage analysis, and an intelligent chatbot assistant.
 
-### 🌌 What Makes This Special
+### Key Features
 
-**Living Canvas Background**
-- 1200+ flowing brushstrokes following Perlin-noise flow fields
-- 15 pulsing golden vortex stars that breathe on a 12-second cycle
-- Prussian blues, cobalt skies, and cadmium golds straight from Van Gogh's palette
-- Canvas that never repeats — every moment is unique
+**Real-Time System Monitoring**
+- CPU, memory, network, and disk I/O metrics with live updates
+- Process constellation view displaying running processes as interactive stars
+- Brushstroke-style charts with organic, hand-painted visualization
+- Ambient animations with breathing effects and dynamic color shifts
 
-**Painterly Glassmorphism UI**
-- Cards with frosted glass effects and hand-painted gold accents
-- Brushstroke SVG decorations on every corner
-- Typography: Playfair Display for metrics, Crimson Pro for labels
-- Hover effects that lift cards with warm amber glows
-
-**Process Constellation**
-- Your running processes become stars in a mini galaxy
-- Star size = CPU usage, brightness = memory usage
-- Constellation lines connect your top 5 processes
-- Interactive tooltips with process details
-- Color-coded: amber for high CPU, blue-white for idle
-
-**Brushstroke Charts**
-- Chart.js enhanced with custom painted line renderer
-- Lines wobble organically like a loaded brush
-- Gradient strokes: CPU (yellow→orange), Memory (cobalt→sky), Network (green→emerald), Disk (red→coral)
-- Faint bristle lines simulate fan brush texture
-- Radial gradient backgrounds for depth
-
-**Ambient Intelligence**
-- Master time oscillator drives subtle hue rotation (±8°, 15s cycle)
-- Card borders pulse independently (0.15→0.35 opacity, 6s cycle)
-- Ripples emanate from chart updates
-- CPU >80% triggers crimson heartbeat animation
-- Anomaly detection shows red impasto slash
-- Number counters roll like slot machines
-
-**AI-Powered Anomaly Detection**
-- Isolation Forest machine learning (scikit-learn)
-- Learns baseline from first 30 samples
+**AI-Powered Intelligence**
+- Isolation Forest machine learning for anomaly detection
+- Baseline learning from initial 30 samples
 - Real-time root cause analysis with Z-score calculations
-- Detects CPU spikes, memory leaks, network floods, disk bottlenecks
+- Groq-powered chatbot for system insights and assistance
+
+**Storage Management**
+- Drive overview with usage statistics
+- Large file detection and directory analysis
+- File type distribution with pie chart visualization
+- Directory size analysis with bar graph representation
+
+**Artistic Design**
+- 1200+ flowing brushstrokes following Perlin-noise flow fields
+- 15 pulsing golden stars with 12-second breathing cycle
+- Van Gogh color palette (Prussian blue, cobalt, gold, wheat)
+- Glassmorphism UI with painterly effects
 
 ---
 
-## 🚀 Quick Start
+## Installation
 
+### Prerequisites
+
+- Python 3.8 or higher
+- pip package manager
+- Modern web browser (Chrome, Firefox, Edge, Safari)
+
+### Setup Instructions
+
+1. Clone the repository:
 ```bash
-# Install dependencies
+git clone https://github.com/sdsorigins/pbl2.git
+cd pbl2
+```
+
+2. Install dependencies:
+```bash
 pip install -r requirements.txt
-
-# Run the masterpiece
-python app.py
 ```
 
-Visit `http://localhost:5000` and watch your system paint itself.
-
----
-
-## 🎯 Features at a Glance
-
-| Feature | Description |
-|---------|-------------|
-| 🎨 **Van Gogh Canvas** | 1200 flowing brushstrokes + 15 pulsing stars |
-| 📊 **Real-Time Metrics** | CPU, Memory, Network, Disk I/O |
-| 🌟 **Process Galaxy** | Interactive constellation of running processes |
-| 🖌️ **Brushstroke Charts** | Organic, hand-painted data visualization |
-| 🤖 **AI Detection** | Isolation Forest anomaly detection |
-| 💬 **AI Chatbot** | Groq-powered system assistant |
-| 💾 **Storage Analysis** | Drive overview, large files, directory scanning |
-| ⌨️ **Keyboard Shortcuts** | Ctrl+M (monitor), Ctrl+K (chatbot) |
-| 🎭 **Ambient Engine** | Breathing animations, ripples, heartbeats |
-
----
-
-## 🎨 The Van Gogh Palette
-
-```css
-Prussian Blue:  #0d2040  /* Deep night sky */
-Cobalt:         #1a3a6b  /* Twilight depth */
-Sky Blue:       #3d7abf  /* Starry highlights */
-Warm Black:     #0a0f1e  /* Canvas base */
-Gold:           #c8840a  /* Star cores */
-Wheat:          #e8c97a  /* Moonlight glow */
+3. Configure environment variables (optional):
+```bash
+cp .env.example .env
 ```
-
----
-
-## 🛠️ Technology Stack
-
-**Backend**
-- Flask + SocketIO for real-time WebSocket communication
-- psutil for system metrics collection
-- scikit-learn Isolation Forest for anomaly detection
-- Threading for background monitoring loops
-
-**Frontend**
-- Vanilla JavaScript (no frameworks)
-- Chart.js with custom BrushstrokePlugin
-- GSAP for smooth animations
-- Custom Perlin-noise flow field canvas
-- Google Fonts: Playfair Display + Crimson Pro
-
-**AI Integration**
-- Groq API for chatbot intelligence
-- Real-time anomaly detection with root cause analysis
-
----
-
-## ⌨️ Keyboard Shortcuts
-
-- `Ctrl + M` — Start/Stop Monitoring
-- `Ctrl + K` — Toggle AI Chatbot
-
----
-
-## 🎭 Performance
-
-- 60 FPS canvas animations with requestAnimationFrame
-- Intelligent opacity layering (no clearRect for painterly buildup)
-- Chart data capped at 20 points for smooth updates
-- Debounced resize handlers
-- Hardware-accelerated CSS transforms
-
----
-
-## 🌐 Browser Support
-
-- ✅ Chrome/Edge (Full support)
-- ✅ Firefox (Full support)
-- ✅ Safari (Full support with prefixes)
-- ❌ IE11 (Not supported - uses modern JS)
-
----
-
-## 📝 Configuration
-
-Copy `.env.example` to `.env` and add your Groq API key for chatbot:
-
-```env
+Edit `.env` and add your Groq API key for chatbot functionality:
+```
 GROQ_API_KEY=your_api_key_here
 ```
 
----
+4. Run the application:
+```bash
+python app.py
+```
 
-## 🎨 Design Philosophy
-
-This isn't just a dashboard — it's a living painting. Every element breathes:
-
-- **Brushstrokes** drift across the canvas following invisible currents
-- **Stars** pulse like distant suns on a 12-second cosmic rhythm
-- **Cards** lift and glow when you approach them
-- **Charts** paint themselves with organic, hand-drawn lines
-- **Numbers** roll into place like vintage mechanical counters
-- **Processes** become constellations in a miniature galaxy
-
-The entire interface oscillates gently — hue shifts, border pulses, ambient breathing — creating the feeling of standing inside a Van Gogh painting at 2am in an artist's studio, watching the canvas come alive by candlelight.
+5. Open your browser and navigate to:
+```
+http://localhost:5000
+```
 
 ---
 
-## 🏛️ Built Like It Belongs in a Museum
+## Architecture
 
-Every detail crafted with intention:
-- Glassmorphism cards with hand-painted gold accents
-- Custom paintbrush cursor that rotates on click
-- Ripples that emanate from data updates
-- Heartbeat animations when CPU runs hot
-- Anomaly slashes that paint across the screen
-- Constellation tooltips with process details
+### Technology Stack
+
+**Backend**
+- Flask: Web framework for HTTP routing
+- Flask-SocketIO: Real-time WebSocket communication
+- psutil: System metrics collection
+- scikit-learn: Isolation Forest anomaly detection
+- Threading: Background monitoring loops
+
+**Frontend**
+- Vanilla JavaScript: Core application logic
+- Chart.js: Data visualization with custom plugins
+- Socket.IO Client: Real-time data streaming
+- CSS3: Glassmorphism effects and animations
+- HTML5 Canvas: Van Gogh background rendering
+
+**AI Integration**
+- Groq API: Chatbot intelligence (Mixtral model)
+- Isolation Forest: Unsupervised anomaly detection
+- Z-score Analysis: Root cause identification
+
+### System Components
+
+**ResourceMonitor** (`monitor.py`)
+- Collects CPU, memory, network, and disk metrics
+- Calculates rates for network and disk I/O
+- Retrieves top processes by CPU usage
+
+**AnomalyDetector** (`anomaly_detector.py`)
+- Implements Isolation Forest machine learning
+- Learns baseline from initial samples
+- Detects anomalies and analyzes root causes
+
+**SimpleStorageAnalyzer** (`simple_storage.py`)
+- Scans drives and directories
+- Identifies large files
+- Calculates storage usage statistics
+
+**VanGoghBackground** (`vangogh-bg.js`)
+- Renders 1200+ flowing brushstrokes
+- Implements Perlin noise flow fields
+- Animates pulsing star effects
+
+**ProcessConstellation** (`constellation.js`)
+- Visualizes processes as stars
+- Draws constellation connections
+- Provides interactive tooltips
 
 ---
 
-## 📊 What It Monitors
+## Usage
 
-- **CPU**: Usage %, core count, frequency
-- **Memory**: Used/total GB, percentage
-- **Network**: Upload/download MB/s
-- **Disk I/O**: Read/write MB/s
-- **Processes**: Top 10 by CPU usage
-- **Anomalies**: AI-detected unusual patterns
-- **Storage**: Drive overview, large files, directory trees
+### Keyboard Shortcuts
+
+- `Ctrl + M` — Start/Stop system monitoring
+- `Ctrl + K` — Toggle AI chatbot
+
+### Navigation
+
+**Monitoring Tab**
+- View real-time CPU, memory, network, and disk metrics
+- Monitor process constellation
+- Track anomaly detection status
+- Control monitoring with start/stop buttons
+
+**Storage Tab**
+- Select drive from dropdown menu
+- Analyze directory structure
+- View file type distribution
+- Identify large files
+- Review cleanup suggestions
+
+### Chatbot Commands
+
+The AI chatbot supports natural language queries and preset commands:
+- CPU Status
+- Memory Check
+- Network Stats
+- Disk Activity
+- Top Processes
+- System Health
+- Anomaly Report
+- Storage Overview
+
+### Monitoring Controls
+
+1. Click "Start Monitoring" to begin real-time data collection
+2. AI learns baseline from first 30 samples
+3. Anomaly detection activates after training period
+4. Click "Stop Monitoring" to pause data collection
 
 ---
 
-## 🎯 Use Cases
+## Performance Optimization
 
-- **System Administrators**: Monitor server health with style
-- **Developers**: Watch your build processes in a living painting
-- **Data Scientists**: Visualize ML training runs artistically
-- **Artists**: Experience data as art
-- **Anyone**: Who wants their system monitor to be beautiful
+- 60 FPS canvas animations using requestAnimationFrame
+- Chart data limited to 20 points for optimal rendering
+- Debounced resize handlers for responsive design
+- Hardware-accelerated CSS transforms
+- Efficient WebSocket communication for real-time updates
 
----
+## Browser Compatibility
 
-## 🤝 Contributing
-
-This is art. Contributions welcome, but maintain the aesthetic:
-- Keep the Van Gogh palette
-- Preserve the painterly feel
-- No sharp corners (border-radius: 3px max)
-- Typography must be Playfair Display or Crimson Pro
-- All animations must breathe organically
+| Browser | Support |
+|---------|---------|
+| Chrome/Edge | Full support |
+| Firefox | Full support |
+| Safari | Full support |
+| IE11 | Not supported |
 
 ---
 
-## 📜 License
+## Project Structure
 
-MIT License - Paint freely
+```
+pbl2/
+├── app.py                      # Flask application and API routes
+├── monitor.py                  # System metrics collection
+├── anomaly_detector.py         # ML-based anomaly detection
+├── simple_storage.py           # Storage analysis utilities
+├── requirements.txt            # Python dependencies
+├── .env.example               # Environment configuration template
+├── templates/
+│   └── index-premium.html     # Main application template
+└── static/
+    ├── app-clean.js           # Core application logic
+    ├── chatbot.js             # Chatbot implementation
+    ├── constellation.js       # Process constellation view
+    ├── storage.js             # Storage management
+    ├── vangogh-bg.js          # Van Gogh background renderer
+    ├── shooting-stars.js      # Particle effects
+    └── style-premium.css      # Application styling
+```
 
 ---
 
-## 🎨 Credits
+## Team
+
+**Project Contributors**
+- Saurabh: Chatbot and storage analysis
+- Pragun: I/O monitoring and isolation forest implementation
+- Vedant: CPU monitoring and socket communication
+- Ishita: Frontend design and network analysis
+
+---
+
+## License
+
+MIT License - Open source and free to use
+
+---
+
+## Acknowledgments
 
 Inspired by Vincent van Gogh's *Starry Night* (1889)
 
-Built with passion for the intersection of art and technology.
+Built with passion for the intersection of art, technology, and system monitoring.
 
 ---
 
-**"I dream my painting and I paint my dream."** — Vincent van Gogh
+## Support
 
-Now your system monitor dreams too. 🌟
+For issues, questions, or contributions, please visit:
+https://github.com/sdsorigins/pbl2
+
+---
+
+**System monitoring reimagined as art.**
